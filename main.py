@@ -5,68 +5,57 @@ import shutil
 import os
 from zipfile import ZipFile
 
-path= os.getcwd() #This function of the Python OS module returns the string containing the absolute path to the current working directory. Always assign the names of the parameters as they are assigned in the modules.
-dir = 'cache'
-Cache_dir= os.path.join (path,dir)
+path = os.getcwd()
+data_path = os.path.join(path,"data.zip")
+cache_path = os.path.join(path,'cache')
 
 # 1 EXERCISE
 def clean_cache ():
-   
-   check_folder = os.path.isdir('cache') #----->   # checking if the directory cache, exist or not. 
-   if check_folder:                                
-        shutil.rmtree (Cache_dir)                  
-        #print("% s has been removed successfully" % dir)     
-        os.mkdir(Cache_dir)
-        #print("% s has been created successfully" % dir) # print with % is similar to f'string' syntax for linking string and variables.
+    check_folder = os.path.isdir('cache') # checking if the directory cache, exists or not. 
+    if check_folder:                                
+        shutil.rmtree(cache_path)                  
+        os.mkdir(cache_path)
+    else: 
+       os.mkdir (cache_path)
 
-#print (clean_cache())
+#print(clean_cache())
 
 # 2 EXERCISE
 
-file_path = os.path.join (path,"data.zip")
+def cache_zip(file_path, dir_path):
 
-def cache_zip (file_path, dir_path):
-
-    with ZipFile(file_path, 'r') as zip:  #r: mode metadata_encoding => https://docs.python.org/3/library/zipfile.html
+    with ZipFile(file_path, 'r') as zip: 
         zip.extractall(dir_path)
-        #print('Done!')
-    
-#print (cache_zip(file_path,Cache_dir))
+        
+#print(cache_zip(data_path, cache_path))
 
 # 3 EXERCISE
 
-def cached_files ():
+def cached_files(): 
 
-    files_cache= os.listdir (Cache_dir) # cache_dir is already an absolute path
-    return files_cache
+    path= 'C:/Users/lesty/OneDrive/Desktop/WincAcademy/print/files/cache/' #absolute path
+    files_cache = os.listdir(path)
+    files_dir = list()
+    for file in files_cache:
+        file_path = f"{path}{file}"
+        files_dir.append(file_path)
 
-#print (cached_files())
+    return files_dir #returns a list of all the file paths in the cache
 
+#print(cached_files())
 
 # 4 EXERCISE
 
-def find_password(file_paths):
-     
-    open_gate1= os.listdir (file_paths) #got a file list
-    
-    for file in open_gate1:
-        gate2= os.path.join(file_paths,file)
-        open_gate2= open (gate2,'r') # got just 1 file
-        if 'password' in open_gate2.read():
-            #print (file)
-            open_gate3= open(gate2,'r') # got the one that has the password
-            
-            for count_item, value in enumerate (open_gate3):
+paths_list = cached_files()
+
+def find_password(paths_list):
+
+    for file in paths_list:
+        if 'password' in open (file,'r').read():
+            for count_item, value in enumerate (open(file,'r')):
                 if 'password' in value:
                     password = (value[value.find(" "):][1:])
+                    return password
 
-    return password
-print (find_password(Cache_dir))
+print(find_password(paths_list))
 
-
-
-
-
-
-         
-    
